@@ -24,7 +24,6 @@ export class App {
 
   initMiddleware() {
     this.app.use(json());
-    console.log("미들웨어 등록 완료");
   }
 
   initErrorMiddleware() {

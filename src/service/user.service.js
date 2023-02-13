@@ -1,3 +1,5 @@
+import { startWithConnectionPool } from "../repository/utils.js";
+
 export class UserService {
   constructor(userRepository, passwordEncoder) {
     this.userRepository = userRepository;
@@ -8,9 +10,13 @@ export class UserService {
     // 비밀번호 암호화
     const encodedPassword = this.passwordEncoder.encode(user.password);
 
-    await this.userRepository.insertUser({
+    const res = await startWithConnectionPool(this.userRepository.insertUser)({
       ...user,
       password: encodedPassword,
     });
+
+    console.log(res);
+
+    return res;
   }
 }

@@ -34,4 +34,12 @@ export class UserController {
       },
     };
   }
+
+  //   async signIn(req, res) {
+  //     const { email, password } = req.body;
+  //     if (!email) throw new BadRequest("이메일 값이 비어있습니다");
+  //     if (!password) throw new BadRequest("비밀번호 값이 비어있습니다");
+
+  //     const accessToken = await this.userService.signIn(email, password);
+  //   }
 }
