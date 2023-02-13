@@ -2,6 +2,7 @@ import { Router } from "express";
 import { wrap } from "../middleware/wrap.js";
 import { BadRequest } from "../error/BadRequest.js";
 import { Forbidden } from "../error/Forbidden.js";
+import { auth } from "../middleware/auth.middleware.js";
 
 export class UserController {
   constructor(userService) {
@@ -16,7 +17,7 @@ export class UserController {
     router.post("/", wrap(this.signup.bind(this)));
     router.post("/signIn", wrap(this.signIn.bind(this)));
     router.post("/signOut", wrap(this.singOut.bind(this)));
-    router.get("/check", wrap(this.check.bind(this)));
+    router.get("/check", auth, wrap(this.check.bind(this)));
 
     this.router.use(this.path, router);
   }
@@ -70,10 +71,6 @@ export class UserController {
   }
 
   async check(req, res) {
-    if (!req.user) {
-      throw new Forbidden("로그인이 필요합니다!");
-    }
-
     return {
       email: req.user.email,
     };

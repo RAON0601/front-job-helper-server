@@ -9,9 +9,9 @@ export const jwtParseMiddleware = (req, res, next) => {
     return;
   }
 
-  const decoded = jwtService.verify(token);
+  let decoded = jwtService.verify(token);
 
-  // 토큰 만료일이 하루밖에 안남으면 토큰을 재발급합니다
+  // 토큰 만료일이 하루밖에 안남으면 토큰을 재발급
   const dayAmount = 60 * 60 * 24;
   const millisecond = 1000;
 
@@ -22,6 +22,7 @@ export const jwtParseMiddleware = (req, res, next) => {
       maxAge: process.env.JWT_EXPIRE_NUMBER,
       httpOnly: true,
     });
+    decoded = refreshToken;
   }
 
   req.user = decoded;
