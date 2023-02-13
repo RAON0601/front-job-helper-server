@@ -7,7 +7,14 @@ export class PasswordEncoder {
       .pbkdf2Sync(password, salt, 1, 32, "sha512")
       .toString("hex");
 
-    return {encodedPassword, salt};
+    return { encodedPassword, salt };
+  }
+
+  verify(password, salt, savedPassword) {
+    const encodedPassword = crypto
+      .pbkdf2Sync(password, salt, 1, 32, "sha512")
+      .toString("hex");
+
+    return encodedPassword === savedPassword;
   }
 }
-

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { wrap } from "../middleware/wrap.js";
 import { BadRequest } from "../error/BadRequest.js";
+import { Forbidden } from "../error/Forbidden.js";
 
 export class UserController {
   constructor(userService) {
@@ -13,6 +14,10 @@ export class UserController {
   initRoute() {
     const router = Router();
     router.post("/", wrap(this.signup.bind(this)));
+    router.post("/signIn", wrap(this.signIn.bind(this)));
+    router.post("/signOut", wrap(this.singOut.bind(this)));
+    router.get("/check", wrap(this.check.bind(this)));
+
     this.router.use(this.path, router);
   }
 
@@ -35,11 +40,42 @@ export class UserController {
     };
   }
 
-  //   async signIn(req, res) {
-  //     const { email, password } = req.body;
-  //     if (!email) throw new BadRequest("이메일 값이 비어있습니다");
-  //     if (!password) throw new BadRequest("비밀번호 값이 비어있습니다");
+  async signIn(req, res) {
+    const { email, password } = req.body;
+    if (!email) throw new BadRequest("이메일 값이 비어있습니다");
+    if (!password) throw new BadRequest("비밀번호 값이 비어있습니다");
 
-  //     const accessToken = await this.userService.signIn(email, password);
-  //   }
+    const loginRequest = { email, password };
+    const accessToken = await this.userService.signIn(loginRequest);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: process.env.JWT_EXPIRE_NUMBER,
+    });
+
+    return {
+      status: "SUCCESS",
+    };
+  }
+
+  async singOut(req, res) {
+    res.cookie("accessToken", null, {
+      httpOnly: true,
+      maxAge: 0,
+    });
+
+    return {
+      status: "SUCCESS",
+    };
+  }
+
+  async check(req, res) {
+    if (!req.user) {
+      throw new Forbidden("로그인이 필요합니다!");
+    }
+
+    return {
+      email: req.user.email,
+    };
+  }
 }

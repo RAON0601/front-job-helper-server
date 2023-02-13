@@ -9,4 +9,17 @@ export class UserRepository {
 
     return user;
   }
+
+  async findByEmail(connection, email) {
+    const ret = await connection.query(
+      `SELECT email, password, salt, nickname, created_at, updated_at, deleted_at
+       FROM users
+       WHERE email = ?
+      `,
+      [email]
+    );
+
+    const user = ret[0][0];
+    return user;
+  }
 }

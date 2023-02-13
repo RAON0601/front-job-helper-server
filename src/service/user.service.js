@@ -1,9 +1,11 @@
+import { UnAuthorized } from "../error/UnAuthorized.js";
 import { startWithConnectionPool } from "../repository/utils.js";
 
 export class UserService {
-  constructor(userRepository, passwordEncoder) {
+  constructor(userRepository, passwordEncoder, jwtService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.jwtService = jwtService;
   }
 
   async signup(user) {
@@ -19,5 +21,19 @@ export class UserService {
     });
 
     return res;
+  }
+
+  async signIn(loginRequest) {
+    const { email, password } = loginRequest;
+    const user = await startWithConnectionPool(this.userRepository.findByEmail)(
+      email
+    );
+
+    if (!this.passwordEncoder.verify(password, user.salt, user.password)) {
+      throw new UnAuthorized("이메일과 비밀번호가 일치하지 않습니다.");
+    }
+
+    const token = this.jwtService.generateToken({ email });
+    return token;
   }
 }
