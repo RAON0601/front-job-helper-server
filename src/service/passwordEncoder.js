@@ -7,6 +7,7 @@ export class PasswordEncoder {
       .pbkdf2Sync(password, salt, 1, 32, "sha512")
       .toString("hex");
 
-    return encodedPassword;
+    return {encodedPassword, salt};
   }
 }
+

@@ -8,14 +8,15 @@ export class UserService {
 
   async signup(user) {
     // 비밀번호 암호화
-    const encodedPassword = this.passwordEncoder.encode(user.password);
+    const { encodedPassword, salt } = this.passwordEncoder.encode(
+      user.password
+    );
 
     const res = await startWithConnectionPool(this.userRepository.insertUser)({
       ...user,
       password: encodedPassword,
+      salt,
     });
-
-    console.log(res);
 
     return res;
   }
