@@ -1,8 +1,8 @@
-import { ConnectionPool } from "../config/db.js";
+import { getConnectionPool } from "../config/db.js";
 
 export const startWithConnectionPool = (cb) => {
   return async (data) => {
-    const connection = await ConnectionPool.getConnection();
+    const connection = await getConnectionPool().getConnection();
     try {
       const res = await cb(connection, data);
       return res;
@@ -13,4 +13,3 @@ export const startWithConnectionPool = (cb) => {
     }
   };
 };
-

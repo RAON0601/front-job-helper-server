@@ -7,7 +7,8 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 import { JwtService } from "./utils/jwt.js";
 import cookieParser from "cookie-parser";
 import { jwtParseMiddleware } from "./middleware/jwt.middleware.js";
-import { imageUploader } from "./utils/AwsS3Uploader.js";
+import { createConnection } from "./config/db.js";
+import { ImageUploader } from "./utils/imageUploader.js";
 
 export class App {
   constructor() {
@@ -15,9 +16,11 @@ export class App {
     this.port = process.env.SERVER_PORT || 6000;
   }
 
-  initializeController() {
+  createControllers() {
+    const controllers = [];
     const passwordEncoder = new PasswordEncoder();
     const userRepository = new UserRepository();
+    const imageUploader = new ImageUploader();
     const jwtService = new JwtService();
     const userService = new UserService(
       userRepository,
@@ -25,12 +28,14 @@ export class App {
       jwtService
     );
     const userController = new UserController(userService);
-    const router = Router();
+    controllers.push(userController);
+    return controllers;
+  }
 
-    router.use(userController.router);
-    router.post("/test/image", imageUploader.single("image"), (req, res) => {
-      res.send("good");
-    });
+  initializeControllers() {
+    const controllers = this.createControllers();
+    const router = Router();
+    controllers.forEach((controller) => router.use(controller.router));
     this.app.use(router);
   }
 
@@ -45,8 +50,9 @@ export class App {
   }
 
   async startServer() {
+    createConnection();
     this.initMiddleware();
-    this.initializeController();
+    this.initializeControllers();
     this.initErrorMiddleware();
 
     this.app.listen(this.port, () =>
