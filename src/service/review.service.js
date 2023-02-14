@@ -18,6 +18,7 @@ export class ReviewService {
 
     // 이 부분은 ORM 없이 바꾸기 힘들겠다.
     const review = {
+      reviewId: data.review_id,
       title: data.title,
       contents: data.contents,
       createdAt: data.created_at,
@@ -29,6 +30,12 @@ export class ReviewService {
     };
 
     return { review, writer };
+  }
+
+  async fetchReviews(page, search) {
+    const searchParam = { page, search };
+    const reviews = await startWithConnectionPool(this.reviewRepository.findByPageAndSearch)(searchParam);
+    return reviews;
   }
 
   async updateReview(email, reviewInput) {
@@ -43,6 +50,7 @@ export class ReviewService {
 
     // 이 부분은 ORM 없이 바꾸기 힘들겠다.
     const review = {
+      reviewId: updatedReview.review_id,
       title: updatedReview.title,
       contents: updatedReview.contents,
       createdAt: updatedReview.created_at,

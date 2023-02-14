@@ -15,6 +15,7 @@ export class ReviewController {
     const router = Router();
 
     router.get('/:reviewId', handlerWrap(this.fetchReview.bind(this)));
+    router.get('/', handlerWrap(this.fetchReviews.bind(this)));
     router.put('/:reviewId', auth, handlerWrap(this.updateReview.bind(this)));
     router.delete('/:reviewId', auth, handlerWrap(this.deleteReview.bind(this)));
     router.post('/', auth, handlerWrap(this.createReview.bind(this)));
@@ -46,6 +47,22 @@ export class ReviewController {
       status: 'SUCCESS',
       review,
       writer,
+    };
+  }
+
+  async fetchReviews(req, res) {
+    const pageInput = Number(req.query.page);
+
+    if (pageInput <= 0 || pageInput === NaN || !pageInput || !Number.isInteger(pageInput))
+      throw new BadRequest('page 값은 1이상의 정수여야 합니다.');
+
+    const page = req.query.page || 1;
+    const search = req.query.search || '';
+
+    const reviews = await this.reviewService.fetchReviews(page, search);
+    return {
+      status: 'SUCCESS',
+      reviews,
     };
   }
 
