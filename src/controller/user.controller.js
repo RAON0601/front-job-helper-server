@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { wrap } from "../middleware/wrap.js";
 import { BadRequest } from "../error/BadRequest.js";
-import { Forbidden } from "../error/Forbidden.js";
 import { auth } from "../middleware/auth.middleware.js";
 
 export class UserController {
@@ -24,8 +23,8 @@ export class UserController {
 
   async signup(req, res) {
     const { email, password, nickname } = req.body;
-    if (!email) throw new BadRequest("이메일 값이 비어있습니다");
-    if (!password) throw new BadRequest("비밀번호 값이 비어있습니다");
+    if (!email) throw new BadRequest("이메일이 비어있습니다");
+    if (!password) throw new BadRequest("비밀번호가 비어있습니다");
     if (!nickname) throw new BadRequest("닉네임이 비어 있습니다.");
 
     const user = { email, password, nickname };
@@ -43,8 +42,8 @@ export class UserController {
 
   async signIn(req, res) {
     const { email, password } = req.body;
-    if (!email) throw new BadRequest("이메일 값이 비어있습니다");
-    if (!password) throw new BadRequest("비밀번호 값이 비어있습니다");
+    if (!email) throw new BadRequest("이메일이 비어있습니다");
+    if (!password) throw new BadRequest("비밀번호이 비어있습니다");
 
     const loginRequest = { email, password };
     const accessToken = await this.userService.signIn(loginRequest);

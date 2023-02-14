@@ -1,4 +1,4 @@
-import { JwtService } from "../service/jwt.service.js";
+import { JwtService } from "../utils/jwt.js";
 
 export const jwtParseMiddleware = (req, res, next) => {
   const jwtService = new JwtService();

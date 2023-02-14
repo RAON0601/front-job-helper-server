@@ -3,7 +3,7 @@ export class UserRepository {
     const { email, password, nickname, salt } = user;
 
     await connection.query(
-      "INSERT INTO users(email, password, salt, nickname, created_at) values (?, ?, ?, ?, current_timestamp())",
+      "INSERT INTO users(email, password, salt, nickname, created_at) VALUES (?, ?, ?, ?, current_timestamp())",
       [email, password, salt, nickname]
     );
 

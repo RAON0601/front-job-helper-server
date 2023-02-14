@@ -1,12 +1,13 @@
 import express, { json, Router } from "express";
 import { UserController } from "./controller/user.controller.js";
 import { UserRepository } from "./repository/user.repository.js";
-import { PasswordEncoder } from "./service/passwordEncoder.js";
+import { PasswordEncoder } from "./utils/passwordEncoder.js";
 import { UserService } from "./service/user.service.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
-import { JwtService } from "./service/jwt.service.js";
+import { JwtService } from "./utils/jwt.js";
 import cookieParser from "cookie-parser";
 import { jwtParseMiddleware } from "./middleware/jwt.middleware.js";
+import { imageUploader } from "./utils/AwsS3Uploader.js";
 
 export class App {
   constructor() {
@@ -27,6 +28,9 @@ export class App {
     const router = Router();
 
     router.use(userController.router);
+    router.post("/test/image", imageUploader.single("image"), (req, res) => {
+      res.send("good");
+    });
     this.app.use(router);
   }
 
