@@ -1,3 +1,4 @@
+import { BadRequest } from "../error/BadRequest.js";
 import { startWithConnectionPool } from "../utils/startWithConnection.js";
 
 export class ReviewService {
@@ -15,6 +16,8 @@ export class ReviewService {
     const data = await startWithConnectionPool(this.reviewRepository.findById)(
       reviewId
     );
+
+    if (!data) throw new BadRequest("해당 리뷰가 존재하지 않습니다.");
 
     const review = {
       title: data.title,
