@@ -14,6 +14,7 @@ export class ReviewController {
   initRouter() {
     const router = Router();
 
+    router.get("/:reviewId", handlerWrap(this.fetchReview.bind(this)));
     router.post("/", auth, handlerWrap(this.createReview.bind(this)));
 
     this.router.use(this.path, router);
@@ -31,6 +32,17 @@ export class ReviewController {
     return {
       status: "SUCCESS",
       review,
+    };
+  }
+
+  async fetchReview(req, res) {
+    const reviewId = req.params.reviewId;
+    const { review, writer } = await this.reviewService.fetchReview(reviewId);
+
+    return {
+      status: "SUCCESS",
+      review,
+      writer,
     };
   }
 }
