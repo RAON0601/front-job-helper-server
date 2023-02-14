@@ -13,7 +13,7 @@ AWS.config.update({
   },
 });
 
-const allowdExtensions = [".png", ".jpg", ".jpeg", ".bmp"];
+const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp"];
 const s3 = new AWS.S3();
 
 export const imageUploader = multer({
@@ -22,7 +22,7 @@ export const imageUploader = multer({
     bucket: process.env.AWS_S3_BUCKET,
     key: (req, file, callback) => {
       const extension = path.extname(file.originalname);
-      if (!allowdExtensions.includes(extension)) {
+      if (!allowedExtensions.includes(extension)) {
         return callback(
           new BadRequest(
             "png jpg jpeg bmp 확장자를 가진 파일만 업로드 하실 수 있습니다."
