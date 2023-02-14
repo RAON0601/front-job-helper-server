@@ -16,6 +16,7 @@ export class ReviewController {
 
     router.get('/:reviewId', handlerWrap(this.fetchReview.bind(this)));
     router.put('/:reviewId', auth, handlerWrap(this.updateReview.bind(this)));
+    router.delete('/:reviewId', auth, handlerWrap(this.deleteReview.bind(this)));
     router.post('/', auth, handlerWrap(this.createReview.bind(this)));
 
     this.router.use(this.path, router);
@@ -61,6 +62,18 @@ export class ReviewController {
       status: 'SUCCESS',
       review,
       writer,
+    };
+  }
+
+  async deleteReview(req, res) {
+    const reviewId = req.params.reviewId;
+    const email = req.user.email;
+
+    const review = await this.reviewService.deleteReview(email, reviewId);
+
+    return {
+      status: 'SUCCESS',
+      review,
     };
   }
 }

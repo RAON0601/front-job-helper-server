@@ -47,4 +47,15 @@ export class ReviewRepository {
       [title, contents, reviewId],
     );
   }
+
+  async delete(connection, reviewId) {
+    await connection.query(
+      `
+        UPDATE reviews
+          SET deleted_at=CURRENT_TIMESTAMP()
+        WHERE review_id = ?
+      `,
+      [reviewId],
+    );
+  }
 }

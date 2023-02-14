@@ -55,4 +55,15 @@ export class ReviewService {
 
     return { review, writer };
   }
+
+  async deleteReview(email, reviewId) {
+    const beforeDeleteReview = await startWithConnectionPool(this.reviewRepository.findById)(reviewId);
+
+    if (!beforeDeleteReview) throw new BadRequest('해당 리뷰가 존재하지 않습니다.');
+    if (email !== beforeDeleteReview.user_email) throw new Forbidden('작성자만 삭제 가능합니다.');
+
+    await startWithConnectionPool(this.reviewRepository.delete)(reviewId);
+
+    return beforeDeleteReview;
+  }
 }
