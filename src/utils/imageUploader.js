@@ -24,7 +24,7 @@ export class ImageUploader {
         bucket: process.env.AWS_S3_BUCKET,
         key: (req, file, callback) => {
           const extension = path.extname(file.originalname);
-          if (!allowedExtensions.includes(extension)) {
+          if (!this.allowedExtensions.includes(extension)) {
             return callback(
               new BadRequest(
                 "png jpg jpeg bmp 확장자를 가진 파일만 업로드 하실 수 있습니다."

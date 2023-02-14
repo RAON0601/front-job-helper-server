@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import { jwtParseMiddleware } from "./middleware/jwt.middleware.js";
 import { createConnection } from "./config/db.js";
 import { ImageUploader } from "./utils/imageUploader.js";
+import { ImageController } from "./controller/image.controller.js";
 
 export class App {
   constructor() {
@@ -17,7 +18,6 @@ export class App {
   }
 
   createControllers() {
-    const controllers = [];
     const passwordEncoder = new PasswordEncoder();
     const userRepository = new UserRepository();
     const imageUploader = new ImageUploader();
@@ -27,9 +27,11 @@ export class App {
       passwordEncoder,
       jwtService
     );
+
     const userController = new UserController(userService);
-    controllers.push(userController);
-    return controllers;
+    const imageController = new ImageController(imageUploader);
+
+    return [userController, imageController];
   }
 
   initializeControllers() {
