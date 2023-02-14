@@ -1,4 +1,5 @@
 import { BadRequest } from "../error/BadRequest.js";
+import { Forbidden } from "../error/Forbidden.js";
 import { startWithConnectionPool } from "../utils/startWithConnection.js";
 
 export class ReviewService {
@@ -13,9 +14,9 @@ export class ReviewService {
   }
 
   async fetchReview(reviewId) {
-    const data = await startWithConnectionPool(this.reviewRepository.findById)(
-      reviewId
-    );
+    const data = await startWithConnectionPool(
+      this.reviewRepository.findByIdWithWriter
+    )(reviewId);
 
     if (!data) throw new BadRequest("해당 리뷰가 존재하지 않습니다.");
 
@@ -29,6 +30,38 @@ export class ReviewService {
       nickname: data.nickname,
       profileImageUrl: data.profile_image_url,
     };
+
+    return { review, writer };
+  }
+
+  async updateReview(email, reviewInput) {
+    const beforeUpdateReview = await startWithConnectionPool(
+      this.reviewRepository.findById
+    )(reviewInput.reviewId);
+
+    const { user_email } = beforeUpdateReview;
+
+    if (!beforeUpdateReview)
+      throw new BadRequest("해당 리뷰가 존재하지 않습니다.");
+    if (email !== user_email) throw new Forbidden("작성자만 수정 가능합니다.");
+
+    await startWithConnectionPool(this.reviewRepository.update)(reviewInput);
+
+    const updatedReview = await startWithConnectionPool(
+      this.reviewRepository.findById
+    )(reviewInput.reviewId);
+
+    const review = {
+      title: updatedReview.title,
+      contents: updatedReview.contents,
+      createdAt: updatedReview.created_at,
+    };
+
+    const writer = {
+      nickname: updatedReview.nickname,
+      profileImageUrl: updatedReview.profile_image_url,
+    };
+
     return { review, writer };
   }
 }
