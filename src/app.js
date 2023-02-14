@@ -10,6 +10,9 @@ import { jwtParseMiddleware } from "./middleware/jwt.middleware.js";
 import { createConnection } from "./config/db.js";
 import { ImageUploader } from "./utils/imageUploader.js";
 import { ImageController } from "./controller/image.controller.js";
+import { ReviewController } from "./controller/review.controller.js";
+import { ReviewService } from "./service/review.service.js";
+import { ReviewRepository } from "./repository/review.repository.js";
 
 export class App {
   constructor() {
@@ -20,6 +23,7 @@ export class App {
   createControllers() {
     const passwordEncoder = new PasswordEncoder();
     const userRepository = new UserRepository();
+    const reviewRepository = new ReviewRepository();
     const imageUploader = new ImageUploader();
     const jwtService = new JwtService();
     const userService = new UserService(
@@ -27,11 +31,13 @@ export class App {
       passwordEncoder,
       jwtService
     );
+    const reviewService = new ReviewService(reviewRepository);
 
     const userController = new UserController(userService);
     const imageController = new ImageController(imageUploader);
+    const reviewController = new ReviewController(reviewService);
 
-    return [userController, imageController];
+    return [userController, imageController, reviewController];
   }
 
   initializeControllers() {
@@ -51,7 +57,7 @@ export class App {
     this.app.use(errorMiddleware);
   }
 
-  async startServer() {
+  startServer() {
     createConnection();
     this.initMiddleware();
     this.initializeControllers();
