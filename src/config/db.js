@@ -16,6 +16,7 @@ export const createConnection = () => {
   };
 
   ConnectionPool = mysql.createPool(dbConfig);
+  console.log("DB 연결 완료");
 };
 
 export const getConnectionPool = () => {
