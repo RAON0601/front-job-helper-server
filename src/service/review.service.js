@@ -16,6 +16,7 @@ export class ReviewService {
 
     if (!data) throw new BadRequest('해당 리뷰가 존재하지 않습니다.');
 
+    // 이 부분은 ORM 없이 바꾸기 힘들겠다.
     const review = {
       title: data.title,
       contents: data.contents,
@@ -32,16 +33,15 @@ export class ReviewService {
 
   async updateReview(email, reviewInput) {
     const beforeUpdateReview = await startWithConnectionPool(this.reviewRepository.findById)(reviewInput.reviewId);
-
     const { user_email } = beforeUpdateReview;
 
     if (!beforeUpdateReview) throw new BadRequest('해당 리뷰가 존재하지 않습니다.');
     if (email !== user_email) throw new Forbidden('작성자만 수정 가능합니다.');
 
     await startWithConnectionPool(this.reviewRepository.update)(reviewInput);
-
     const updatedReview = await startWithConnectionPool(this.reviewRepository.findById)(reviewInput.reviewId);
 
+    // 이 부분은 ORM 없이 바꾸기 힘들겠다.
     const review = {
       title: updatedReview.title,
       contents: updatedReview.contents,
