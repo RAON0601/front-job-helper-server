@@ -1,4 +1,4 @@
-import { HttpError } from "../error/HttpError.js";
+import { HttpError } from '../error/HttpError.js';
 
 export const errorMiddleware = (err, req, res, next) => {
   if (err instanceof HttpError) {

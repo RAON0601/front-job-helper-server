@@ -3,8 +3,8 @@ export class UserRepository {
     const { email, password, nickname, salt } = user;
 
     await connection.query(
-      "INSERT INTO users(email, password, salt, nickname, created_at) VALUES (?, ?, ?, ?, current_timestamp())",
-      [email, password, salt, nickname]
+      'INSERT INTO users(email, password, salt, nickname, created_at) VALUES (?, ?, ?, ?, current_timestamp())',
+      [email, password, salt, nickname],
     );
 
     return user;
@@ -16,7 +16,7 @@ export class UserRepository {
        FROM users
        WHERE email = ?
       `,
-      [email]
+      [email],
     );
 
     const user = ret[0][0];

@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
-import { UnAuthorized } from "../error/UnAuthorized.js";
+import jwt from 'jsonwebtoken';
+import { UnAuthorized } from '../error/UnAuthorized.js';
 
 export class JwtService {
   constructor() {
-    this.secretKey = process.env.JWT_SECRET || "secret";
-    this.expire = process.env.JWT_EXPIRE || "7d";
+    this.secretKey = process.env.JWT_SECRET || 'secret';
+    this.expire = process.env.JWT_EXPIRE || '7d';
   }
 
   generateToken(data) {
@@ -15,7 +15,7 @@ export class JwtService {
     try {
       return jwt.verify(token, this.secretKey);
     } catch (err) {
-      throw new UnAuthorized("정당하지 않은 토큰");
+      throw new UnAuthorized('정당하지 않은 토큰');
     }
   }
 }

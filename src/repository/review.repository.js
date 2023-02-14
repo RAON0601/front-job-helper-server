@@ -3,8 +3,8 @@ export class ReviewRepository {
     const { email, title, contents } = review;
 
     await connection.query(
-      "INSERT INTO reviews(user_email, title, contents, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP())",
-      [email, title, contents]
+      'INSERT INTO reviews(user_email, title, contents, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP())',
+      [email, title, contents],
     );
 
     return review;
@@ -16,7 +16,7 @@ export class ReviewRepository {
        FROM reviews r join users u on r.user_email = u.email
        WHERE r.review_id = ? AND r.deleted_at IS NULL;
       `,
-      [reviewId]
+      [reviewId],
     );
 
     return ret[0][0];
@@ -29,7 +29,7 @@ export class ReviewRepository {
         FROM reviews
         WHERE deleted_at IS NULL AND review_id = ?
       `,
-      [reviewId]
+      [reviewId],
     );
 
     return ret[0][0];
@@ -44,7 +44,7 @@ export class ReviewRepository {
           SET title=?, contents=?, updated_at=CURRENT_TIMESTAMP()
         WHERE review_id = ?
       `,
-      [title, contents, reviewId]
+      [title, contents, reviewId],
     );
   }
 }

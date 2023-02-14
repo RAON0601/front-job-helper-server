@@ -1,9 +1,9 @@
-import AWS from "aws-sdk";
-import multer from "multer";
-import multerS3 from "multer-s3";
-import path from "path";
-import { BadRequest } from "../error/BadRequest.js";
-import { getYearMonthDate } from "./time.js";
+import AWS from 'aws-sdk';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
+import path from 'path';
+import { BadRequest } from '../error/BadRequest.js';
+import { getYearMonthDate } from './time.js';
 
 export class ImageUploader {
   constructor() {
@@ -15,7 +15,7 @@ export class ImageUploader {
       },
     });
 
-    this.allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp"];
+    this.allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp'];
     this.s3 = new AWS.S3();
 
     this.instance = multer({
@@ -25,17 +25,13 @@ export class ImageUploader {
         key: (req, file, callback) => {
           const extension = path.extname(file.originalname);
           if (!this.allowedExtensions.includes(extension)) {
-            return callback(
-              new BadRequest(
-                "png jpg jpeg bmp 확장자를 가진 파일만 업로드 하실 수 있습니다."
-              )
-            );
+            return callback(new BadRequest('png jpg jpeg bmp 확장자를 가진 파일만 업로드 하실 수 있습니다.'));
           }
 
           const [year, month, date] = getYearMonthDate(new Date());
           callback(null, `${year}/${month}/${date}/${file.originalname}`);
         },
-        acl: "public-read-write",
+        acl: 'public-read-write',
       }),
     });
   }
