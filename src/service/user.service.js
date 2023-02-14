@@ -1,5 +1,5 @@
 import { UnAuthorized } from "../error/UnAuthorized.js";
-import { startWithConnectionPool } from "../repository/utils.js";
+import { startWithConnectionPool } from "../utils/startWithConnection.js";
 
 export class UserService {
   constructor(userRepository, passwordEncoder, jwtService) {

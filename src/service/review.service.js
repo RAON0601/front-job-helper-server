@@ -1,4 +1,4 @@
-import { startWithConnectionPool } from "../repository/utils.js";
+import { startWithConnectionPool } from "../utils/startWithConnection";
 
 export class ReviewService {
   constructor(reviewRepository) {

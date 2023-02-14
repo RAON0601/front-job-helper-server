@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { wrap } from "../middleware/wrap.js";
 import { BadRequest } from "../error/BadRequest.js";
 import { auth } from "../middleware/auth.middleware.js";
+import { handlerWrap } from "../utils/handlerWrap.js";
 
 export class UserController {
   constructor(userService) {
@@ -13,10 +13,10 @@ export class UserController {
 
   initRoute() {
     const router = Router();
-    router.post("/", wrap(this.signup.bind(this)));
-    router.post("/signIn", wrap(this.signIn.bind(this)));
-    router.post("/signOut", wrap(this.singOut.bind(this)));
-    router.get("/check", auth, wrap(this.check.bind(this)));
+    router.post("/", handlerWrap(this.signup.bind(this)));
+    router.post("/signIn", handlerWrap(this.signIn.bind(this)));
+    router.post("/signOut", handlerWrap(this.singOut.bind(this)));
+    router.get("/check", auth, handlerWrap(this.check.bind(this)));
 
     this.router.use(this.path, router);
   }

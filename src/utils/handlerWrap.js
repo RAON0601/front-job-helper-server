@@ -1,4 +1,4 @@
-export const wrap = (handler) => async (req, res, next) => {
+export const handlerWrap = (handler) => async (req, res, next) => {
   try {
     const response = await handler(req, res, next);
     res.json(response);
@@ -7,5 +7,3 @@ export const wrap = (handler) => async (req, res, next) => {
     next(err);
   }
 };
-
-

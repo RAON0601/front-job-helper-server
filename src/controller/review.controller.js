@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { BadRequest } from "../error/BadRequest.js";
 import { auth } from "../middleware/auth.middleware.js";
-import { wrap } from "../middleware/wrap.js";
+import { handlerWrap } from "../utils/handlerWrap.js";
 
 export class ReviewController {
   constructor(reviewService) {
@@ -14,7 +14,7 @@ export class ReviewController {
   initRouter() {
     const router = Router();
 
-    router.post("/", auth, wrap(this.createReview.bind(this)));
+    router.post("/", auth, handlerWrap(this.createReview.bind(this)));
 
     this.router.use(this.path, router);
   }
