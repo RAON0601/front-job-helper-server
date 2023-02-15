@@ -23,6 +23,25 @@ export class CommentRepository {
     return ret[0][0];
   }
 
+  async findByReviewIdAndPage(connection, searchParam) {
+    const { reviewId, page } = searchParam;
+    const size = 10;
+    const start = (page - 1) * 10;
+
+    const [comments, _] = await connection.query(
+      `
+        SELECT c.comment_id, c.contents, c.created_at, c.updated_at, u.nickname, u.profile_image_url
+        FROM comments c JOIN users u ON c.user_email = u.email
+        WHERE review_id = ? AND c.deleted_at IS NULL
+        ORDER BY c.created_at DESC, c.comment_id DESC
+        LIMIT ?, ?
+      `,
+      [reviewId, start, size],
+    );
+
+    return comments;
+  }
+
   async update(connection, commentInput) {
     const { contents, commentId } = commentInput;
     await connection.query(

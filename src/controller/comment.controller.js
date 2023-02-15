@@ -13,11 +13,24 @@ export class CommentController {
   initRoute() {
     const router = Router();
 
+    router.get('/:reviewId', handlerWrap(this.fetchComments.bind(this)));
     router.post('/', auth, handlerWrap(this.createComment.bind(this)));
     router.put('/:commentId', auth, handlerWrap(this.updateComment.bind(this)));
     router.delete('/:commentId', auth, handlerWrap(this.deleteComment.bind(this)));
 
     this.router.use(this.path, router);
+  }
+
+  async fetchComments(req, res) {
+    const reviewId = req.params.reviewId;
+    const page = req.query.page;
+
+    const comments = await this.commentService.fetchComments(reviewId, page);
+    
+    return {
+      status: 'SUCCESS',
+      comments,
+    };
   }
 
   async createComment(req, res) {

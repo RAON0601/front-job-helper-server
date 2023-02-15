@@ -7,6 +7,24 @@ export class CommentService {
     this.commentRepository = commentRepository;
   }
 
+  async fetchComments(reviewId, page) {
+    const searchParam = { reviewId, page };
+    const comments = await startWithConnectionPool(this.commentRepository.findByReviewIdAndPage)(searchParam);
+
+    return comments.map(c => ({
+      comment: {
+        commentId: c.comment_id,
+        contents: c.contents,
+        createdAt: c.created_at,
+        updatedAt: c.updated_at,
+      },
+      writer: {
+        nickname: c.nickname,
+        profileImageUrl: c.profile_image_url,
+      },
+    }));
+  }
+
   async createComment(commentInput) {
     await startWithConnectionPool(this.commentRepository.save)(commentInput);
 
