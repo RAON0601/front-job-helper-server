@@ -14,20 +14,35 @@ export class CommentController {
     const router = Router();
 
     router.post('/', auth, handlerWrap(this.createComment.bind(this)));
+    router.put('/:commentId', auth, handlerWrap(this.updateComment.bind(this)));
 
     this.router.use(this.path, router);
   }
 
-  createComment(req, res) {
+  async createComment(req, res) {
     const { reviewId, contents } = req.body;
     const email = req.user.email;
     const commentInput = { reviewId, contents, email };
 
-    this.commentService.createComment(commentInput);
+    await this.commentService.createComment(commentInput);
 
     return {
       status: 'SUCCESS',
       comment: commentInput,
+    };
+  }
+
+  async updateComment(req, res) {
+    const { contents } = req.body;
+    const commentId = req.params.commentId;
+    const email = req.user.email;
+    const commentInput = { contents, email, commentId };
+
+    const updatedComment = await this.commentService.updateComment(commentInput);
+
+    return {
+      status: 'SUCCESS',
+      comment: updatedComment,
     };
   }
 }
