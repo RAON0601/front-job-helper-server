@@ -15,6 +15,7 @@ export class CommentController {
 
     router.post('/', auth, handlerWrap(this.createComment.bind(this)));
     router.put('/:commentId', auth, handlerWrap(this.updateComment.bind(this)));
+    router.delete('/:commentId', auth, handlerWrap(this.deleteComment.bind(this)));
 
     this.router.use(this.path, router);
   }
@@ -43,6 +44,18 @@ export class CommentController {
     return {
       status: 'SUCCESS',
       comment: updatedComment,
+    };
+  }
+
+  async deleteComment(req, res) {
+    const commentId = req.params.commentId;
+    const email = req.user.email;
+    const commentInput = { email, commentId };
+
+    const deletedComment = await this.commentService.deleteComment(commentInput);
+    return {
+      status: 'SUCCESS',
+      comment: deletedComment,
     };
   }
 }

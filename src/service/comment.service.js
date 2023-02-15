@@ -24,4 +24,15 @@ export class CommentService {
     const updatedComment = await startWithConnectionPool(this.commentRepository.findById)(commentInput.commentId);
     return updatedComment;
   }
+
+  async deleteComment(commentInput) {
+    const findComment = await startWithConnectionPool(this.commentRepository.findById)(commentInput.commentId);
+
+    if (!findComment) throw new BadRequest('해당 댓글을 찾을 수 없습니다.');
+    if (commentInput.email !== findComment.user_email) throw new Forbidden('작성자만 수정할 수 있습니다.');
+
+    await startWithConnectionPool(this.commentRepository.delete)(commentInput.commentId);
+
+    return findComment;
+  }
 }

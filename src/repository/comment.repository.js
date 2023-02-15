@@ -34,4 +34,15 @@ export class CommentRepository {
       [contents, commentId],
     );
   }
+
+  async delete(connection, commentId) {
+    await connection.query(
+      `
+        UPDATE comments
+            SET deleted_at = CURRENT_TIMESTAMP()
+        WHERE comment_id = ?
+      `,
+      [commentId],
+    );
+  }
 }
