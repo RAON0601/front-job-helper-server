@@ -55,7 +55,12 @@ export class App {
     this.app.use(json());
     this.app.use(cookieParser());
     this.app.use(jwtParseMiddleware);
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: true,
+        credentials: true,
+      }),
+    );
   }
 
   initErrorMiddleware() {
