@@ -70,8 +70,13 @@ export class UserController {
   }
 
   async check(req, res) {
+    const email = req.user.email;
+
+    const user = await this.userService.checkUser(email);
+
     return {
-      email: req.user.email,
+      email: user.email,
+      nickname: user.nickname,
     };
   }
 }

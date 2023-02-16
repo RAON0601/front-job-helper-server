@@ -32,4 +32,10 @@ export class UserService {
     const token = this.jwtService.generateToken({ email });
     return token;
   }
+
+  async checkUser(email) {
+    const user = await startWithConnectionPool(this.userRepository.findByEmail)(email);
+
+    return { email: user.email, nickname: user.nickname };
+  }
 }

@@ -9,6 +9,8 @@ export const errorMiddleware = (err, req, res, next) => {
     return;
   }
 
+  console.log(err);
+
   res.status(500).json({
     err,
   });

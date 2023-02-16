@@ -18,7 +18,7 @@ export const jwtParseMiddleware = (req, res, next) => {
   if (Date.now() / millisecond - decoded.iat > dayAmount) {
     const { email } = decoded;
     const refreshToken = jwtService.generateToken({ email });
-    res.cookie.set('access_token', refreshToken, {
+    res.cookie('access_token', refreshToken, {
       maxAge: process.env.JWT_EXPIRE_NUMBER,
       httpOnly: true,
     });
