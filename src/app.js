@@ -1,4 +1,5 @@
 import express, { json, Router } from 'express';
+import cors from 'cors';
 import { UserController } from './controller/user.controller.js';
 import { UserRepository } from './repository/user.repository.js';
 import { PasswordEncoder } from './utils/passwordEncoder.js';
@@ -54,6 +55,7 @@ export class App {
     this.app.use(json());
     this.app.use(cookieParser());
     this.app.use(jwtParseMiddleware);
+    this.app.use(cors());
   }
 
   initErrorMiddleware() {
