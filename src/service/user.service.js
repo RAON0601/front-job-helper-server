@@ -1,3 +1,4 @@
+import { BadRequest } from '../error/BadRequest.js';
 import { UnAuthorized } from '../error/UnAuthorized.js';
 import { startWithConnectionPool } from '../utils/startWithConnection.js';
 
@@ -9,6 +10,8 @@ export class UserService {
   }
 
   async signup(user) {
+    const findedUser = await startWithConnectionPool(this.userRepository.findByEmail)(user.email);
+    if (findedUser) throw new BadRequest('중복된 회원 이메일입니다!');
     // 비밀번호 암호화
     const { encodedPassword, salt } = this.passwordEncoder.encode(user.password);
 

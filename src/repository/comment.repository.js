@@ -2,12 +2,14 @@ export class CommentRepository {
   async save(connection, commentInput) {
     const { email, contents, reviewId } = commentInput;
 
-    await connection.query(
+    const result = await connection.query(
       `
         INSERT INTO comments(contents, user_email, review_id, created_at) VALUEs (?, ?, ?,  CURRENT_TIMESTAMP())
       `,
       [contents, email, reviewId],
     );
+
+    return result.insertId;
   }
 
   async findById(connection, commentId) {

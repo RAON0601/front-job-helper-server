@@ -2,17 +2,17 @@ export class ReviewRepository {
   async save(connection, review) {
     const { email, title, contents } = review;
 
-    await connection.query(
+    const result = await connection.query(
       'INSERT INTO reviews(user_email, title, contents, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP())',
       [email, title, contents],
     );
 
-    return review;
+    return { ...review, reviewId: result[0].insertId };
   }
 
   async findByIdWithWriter(connection, reviewId) {
     const ret = await connection.query(
-      `SELECT r.review_id, r.title, r.contents, r.created_at, r.updated_at, u.nickname, u.profile_image_url
+      `SELECT r.review_id, r.title, r.contents, r.created_at, r.updated_at, u.nickname, u.profile_image_url, u.email
        FROM reviews r JOIN users u ON r.user_email = u.email
        WHERE r.review_id = ? AND r.deleted_at IS NULL;
       `,

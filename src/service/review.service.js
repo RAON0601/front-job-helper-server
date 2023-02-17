@@ -27,6 +27,7 @@ export class ReviewService {
     const writer = {
       nickname: data.nickname,
       profileImageUrl: data.profile_image_url,
+      email: data.email,
     };
 
     return { review, writer };
