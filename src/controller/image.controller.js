@@ -15,7 +15,7 @@ export class ImageController {
     router.post('/upload', auth, this.imageUploader.instance.single('image'), (req, res) => {
       res.json({
         status: 'SUCCESS',
-        message: '이미지 업로드에 성공했습니다.',
+        url: req.file.location,
       });
     });
 
