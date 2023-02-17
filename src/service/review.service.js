@@ -11,6 +11,10 @@ export class ReviewService {
     return await startWithConnectionPool(this.reviewRepository.save)(reviewInput);
   }
 
+  async countReview() {
+    return await startWithConnectionPool(this.reviewRepository.count)();
+  }
+
   async fetchReview(reviewId) {
     const data = await startWithConnectionPool(this.reviewRepository.findByIdWithWriter)(reviewId);
 

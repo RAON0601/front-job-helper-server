@@ -57,7 +57,7 @@ export class ReviewRepository {
 
   async update(connection, review) {
     const { contents, title, reviewId } = review;
-    console.log(reviewId);
+
     await connection.query(
       `
         UPDATE reviews 
@@ -77,5 +77,17 @@ export class ReviewRepository {
       `,
       [reviewId],
     );
+  }
+
+  async count(connection) {
+    const ret = await connection.query(
+      `
+        SELECT count(*) AS count
+        FROM reviews
+        WHERE deleted_at IS NULL;
+      `,
+    );
+
+    return ret[0][0];
   }
 }

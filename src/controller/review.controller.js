@@ -14,6 +14,7 @@ export class ReviewController {
   initRouter() {
     const router = Router();
 
+    router.get('/count', handlerWrap(this.countOfReview.bind(this)));
     router.get('/:reviewId', handlerWrap(this.fetchReview.bind(this)));
     router.get('/', handlerWrap(this.fetchReviews.bind(this)));
     router.put('/:reviewId', auth, handlerWrap(this.updateReview.bind(this)));
@@ -21,6 +22,12 @@ export class ReviewController {
     router.post('/', auth, handlerWrap(this.createReview.bind(this)));
 
     this.router.use(this.path, router);
+  }
+
+  async countOfReview(req, res) {
+    const data = await this.reviewService.countReview();
+    console.log(data);
+    return data;
   }
 
   async createReview(req, res) {
