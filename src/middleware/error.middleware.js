@@ -5,15 +5,11 @@ export const errorMiddleware = (err, req, res, next) => {
     res.status(err.code).json({
       message: err.message,
     });
-
-    return;
+    next();
   }
-
-  console.log(err);
 
   res.status(500).json({
     err,
   });
-
   next();
 };

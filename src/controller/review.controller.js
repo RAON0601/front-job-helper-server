@@ -26,8 +26,11 @@ export class ReviewController {
 
   async countOfReview(req, res) {
     const data = await this.reviewService.countReview();
-    console.log(data);
-    return data;
+
+    return {
+      status: 'SUCCESS',
+      count: data.count,
+    };
   }
 
   async createReview(req, res) {

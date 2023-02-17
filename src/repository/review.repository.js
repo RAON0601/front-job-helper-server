@@ -30,7 +30,7 @@ export class ReviewRepository {
     const start = (page - 1) * 10;
     const ret = await connection.query(
       `
-        SELECT r.review_id, r.title, r.contents, r.created_at, r.updated_at, u.nickname, u.profile_image_url
+        SELECT r.review_id, r.title, r.created_at, r.updated_at, u.nickname, u.profile_image_url
         FROM reviews r JOIN users u ON r.user_email = u.email
         WHERE r.deleted_at IS NULL AND (title LIKE ? OR contents LIKE ?)
         ORDER BY created_at DESC, r.review_id desc
