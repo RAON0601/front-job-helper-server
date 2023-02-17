@@ -6,10 +6,12 @@ export const errorMiddleware = (err, req, res, next) => {
       message: err.message,
     });
     next();
-  }
+  } else {
+    res.status(500).json({
+      err,
+    });
 
-  res.status(500).json({
-    err,
-  });
-  next();
+    console.log(err);
+    next();
+  }
 };
