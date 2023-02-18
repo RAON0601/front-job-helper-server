@@ -26,7 +26,7 @@ export class CommentController {
     const page = req.query.page;
 
     const comments = await this.commentService.fetchComments(reviewId, page);
-    
+
     return {
       status: 'SUCCESS',
       comments,
@@ -38,11 +38,11 @@ export class CommentController {
     const email = req.user.email;
     const commentInput = { reviewId, contents, email };
 
-    await this.commentService.createComment(commentInput);
+    const createdComment = await this.commentService.createComment(commentInput);
 
     return {
       status: 'SUCCESS',
-      comment: commentInput,
+      comment: createdComment,
     };
   }
 

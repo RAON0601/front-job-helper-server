@@ -27,7 +27,7 @@ export class UserService {
   async signIn(loginRequest) {
     const { email, password } = loginRequest;
     const user = await startWithConnectionPool(this.userRepository.findByEmail)(email);
-
+    if (!user) throw new BadRequest('아이디와 비밀번호를 확인 해주세요!');
     if (!this.passwordEncoder.verify(password, user.salt, user.password)) {
       throw new UnAuthorized('이메일과 비밀번호가 일치하지 않습니다.');
     }

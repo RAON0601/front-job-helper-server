@@ -21,14 +21,15 @@ export class CommentService {
       writer: {
         nickname: c.nickname,
         profileImageUrl: c.profile_image_url,
+        email: c.email,
       },
     }));
   }
 
   async createComment(commentInput) {
-    await startWithConnectionPool(this.commentRepository.save)(commentInput);
+    const commentId = await startWithConnectionPool(this.commentRepository.save)(commentInput);
 
-    return commentInput;
+    return { ...commentInput, commentId };
   }
 
   async updateComment(commentInput) {

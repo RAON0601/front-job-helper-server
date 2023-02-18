@@ -9,7 +9,7 @@ export class CommentRepository {
       [contents, email, reviewId],
     );
 
-    return result.insertId;
+    return result[0].insertId;
   }
 
   async findById(connection, commentId) {
@@ -32,7 +32,7 @@ export class CommentRepository {
 
     const [comments, _] = await connection.query(
       `
-        SELECT c.comment_id, c.contents, c.created_at, c.updated_at, u.nickname, u.profile_image_url
+        SELECT c.comment_id, c.contents, c.created_at, c.updated_at, u.nickname, u.profile_image_url, u.email
         FROM comments c JOIN users u ON c.user_email = u.email
         WHERE review_id = ? AND c.deleted_at IS NULL
         ORDER BY c.created_at DESC, c.comment_id DESC
